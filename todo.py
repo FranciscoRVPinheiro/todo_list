@@ -25,9 +25,9 @@ def login():
         print(request)
 
 def get_payload():
-    title = input("Title: ")
-    description = input("Description: ")
-    status = input("Status: 1 - not started, 2 - in progress, 3 - completed: ")
+    title = input("Title: ").strip()
+    description = input("Description: ").strip()
+    status = input("Status: 1 - not started, 2 - in progress, 3 - completed: ").strip()
 
     if status == "1":
         status = "not started"
@@ -35,13 +35,13 @@ def get_payload():
         status = "in progress"
     elif status == "3":
         status = "completed"
+    else:
+        raise Exception("Invalid input!")
 
     return title, description, status
 
-def create_todo():
+def create_todo(token):
     url = "https://todoapp-nestjs.adaptable.app/todos"
-
-    token = os.getenv("TOKEN")
 
     headers = {"Authorization": "Bearer " + token}
 
@@ -61,10 +61,8 @@ def create_todo():
         print(response)
 
 
-def get_todos():
+def get_todos(token):
     url = "https://todoapp-nestjs.adaptable.app/todos"
-
-    token = os.getenv("TOKEN")
 
     request = requests.get(url, headers={"Authorization": "Bearer " + token})
 
@@ -79,10 +77,8 @@ def get_todos():
         print(request)
 
 
-def delete_todo(id):
+def delete_todo(id, token):
     url = "https://todoapp-nestjs.adaptable.app/todos/" + id
-
-    token = os.getenv("TOKEN")
 
     request = requests.delete(url, headers={"Authorization": "Bearer " + token})
 
@@ -92,10 +88,8 @@ def delete_todo(id):
         print(request)
 
 
-def patch_todo(id):
+def patch_todo(id, token):
     url = "https://todoapp-nestjs.adaptable.app/todos/" + id
-
-    token = os.getenv("TOKEN")
 
     title, description, status = get_payload()
 
@@ -112,32 +106,35 @@ def patch_todo(id):
     else:
         print(request)
 
+if __name__ == "__main__":
 
-while True:
-    print("1. Login")
-    print("2. Create todo")
-    print("3. Get todos")
-    print("4. Delete todo")
-    print("5. Update todo")
-    print("6. Exit")
+    token = os.getenv("TOKEN")
 
-    choice = input("\nEnter your choice: ")
+    while True:
+        print("1. Login")
+        print("2. Create todo")
+        print("3. Get todos")
+        print("4. Delete todo")
+        print("5. Update todo")
+        print("6. Exit")
 
-    if choice == "1":
-        login()
-    elif choice == "2":
-        create_todo()
-    elif choice == "3":
-        get_todos()
-    elif choice == "4":
-        id = input("Enter todo id: ")
-        delete_todo(id)
-    elif choice == "5":
-        id = input("Enter todo id: ")
-        patch_todo(id)
-    elif choice == "6":
-        break
-    else:
-        print("Invalid choice!")
+        choice = input("\nEnter your choice: ").strip()
+
+        if choice == "1":
+            login()
+        elif choice == "2":
+            create_todo(token)
+        elif choice == "3":
+            get_todos(token)
+        elif choice == "4":
+            id = input("Enter todo id: ")
+            delete_todo(id, token)
+        elif choice == "5":
+            id = input("Enter todo id: ")
+            patch_todo(id, token)
+        elif choice == "6":
+            break
+        else:
+            print("Invalid choice!")
 
 
