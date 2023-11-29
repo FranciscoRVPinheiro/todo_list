@@ -29,6 +29,9 @@ def get_payload():
     description = input("Description: ").strip()
     status = input("Status: 1 - not started, 2 - in progress, 3 - completed: ").strip()
 
+    if len(description) == 0:
+        description = 'No description provided.'
+
     if status == "1":
         status = "not started"
     elif status == "2":
@@ -132,7 +135,7 @@ if __name__ == "__main__":
         elif choice == "5":
             id = input("Enter todo id: ")
             patch_todo(id, token)
-        elif choice == "6":
+        elif choice == "0":
             break
         else:
             print("Invalid choice!")
