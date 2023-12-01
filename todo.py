@@ -71,11 +71,12 @@ def get_todos(token):
 
     if request.status_code == 200:
         for todo in request.json():
+            print("\n-------------------------------------")
             print(f'Id: {todo["_id"]}')
             print(f'Title: {todo["title"]}')
             print(f'Description: {todo["description"]}')
             print(f'Status: {todo["status"]}')
-            print("-----------\n")
+            print("-------------------------------------\n")
     else:
         print(request)
 
@@ -119,7 +120,7 @@ if __name__ == "__main__":
         print("3. Get todos")
         print("4. Delete todo")
         print("5. Update todo")
-        print("6. Exit")
+        print("0. Exit")
 
         choice = input("\nEnter your choice: ").strip()
 
