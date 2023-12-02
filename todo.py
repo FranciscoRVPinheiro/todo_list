@@ -2,8 +2,10 @@ import os
 import dotenv
 import requests
 from rich import print
+from rich.console import Console
 
 dotenv.load_dotenv()
+console = Console()
 
 def login():
     url = "https://todoapp-nestjs.adaptable.app/users/login"
@@ -23,25 +25,23 @@ def login():
         print("Your token is: " + token)
         print("\nPlease add this token to your .env file\n")
     else:
-        print(request)
+        print(f'\nCouldn\'t login: {request.json()}')
 
 def get_payload():
     title = input("Title: ").strip()
     description = input("Description: ").strip()
-    status = input("Status: 1 - not started, 2 - in progress, 3 - completed: ").strip()
+    status = console.input("Status: 1 - [red]not started[/], 2 - [blue]in progress[/], 3 - [green]completed[/]: ").strip()
 
     if len(description) == 0:
         description = 'No description provided.'
-
-    if status == "1":
-        status = "not started"
-    elif status == "2":
+        
+    if status == "2":
         status = "in progress"
     elif status == "3":
         status = "completed"
     else:
-        raise Exception("[red]Invalid input![/red]")
-
+        status = "not started"
+        
     return title, description, status
 
 def create_todo(token):
@@ -60,9 +60,9 @@ def create_todo(token):
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        print("[green]Todo created successfully![/green]")
+        print("\n[green]Todo created successfully![/green]\n")
     else:
-        print(response)
+        print(response.json())
 
 
 def get_todos(token):
@@ -72,14 +72,14 @@ def get_todos(token):
 
     if request.status_code == 200:
         for todo in request.json():
-            print("\n-------------------------------------")
-            print(f'Id: {todo["_id"]}')
-            print(f'Title: {todo["title"]}')
-            print(f'Description: {todo["description"]}')
-            print(f'Status: [green]{todo["status"]}[/green]')
-            print("-------------------------------------\n")
+            print("\n-------------------------------------------------")
+            print(f'--| Id: {todo["_id"]}')
+            print(f'--| Title: [yellow]{todo["title"]}[/yellow]')
+            print(f'--| Description: {todo["description"]}')
+            print(f'--| Status: [green]{todo["status"]}[/green]')
+            print("-------------------------------------------------\n")
     else:
-        print(request)
+        print(response.json())
 
 
 def delete_todo(id, token):
@@ -88,9 +88,9 @@ def delete_todo(id, token):
     request = requests.delete(url, headers={"Authorization": "Bearer " + token})
 
     if request.status_code == 200:
-        print("[green]Todo deleted successfully![/green]")
+        print("\n[green]Todo deleted successfully![/green]\n")
     else:
-        print(request)
+        print(response.json())
 
 
 def patch_todo(id, token):
@@ -107,23 +107,23 @@ def patch_todo(id, token):
     request = requests.patch(url, payload, headers={"Authorization": "Bearer " + token})
 
     if request.status_code == 200:
-        print("[green]Todo updated successfully![/green]")
+        print("\n[green]Todo updated successfully![/green]\n")
     else:
-        print(request)
+        print(response.json())
 
 if __name__ == "__main__":
 
     token = os.getenv("TOKEN")
 
     while True:
-        print("1. Login")
+        print("\n1. Login")
         print("2. Create todo")
         print("3. Get todos")
         print("4. Delete todo")
         print("5. Update todo")
         print("0. Exit")
 
-        choice = input("\nEnter your choice: ").strip()
+        choice = console.input("\n[blue]Enter your choice[/]: ").strip()
 
         if choice == "1":
             login()
