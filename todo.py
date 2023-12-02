@@ -1,6 +1,7 @@
 import os
 import dotenv
 import requests
+from rich import print
 
 dotenv.load_dotenv()
 
@@ -39,7 +40,7 @@ def get_payload():
     elif status == "3":
         status = "completed"
     else:
-        raise Exception("Invalid input!")
+        raise Exception("[red]Invalid input![/red]")
 
     return title, description, status
 
@@ -59,7 +60,7 @@ def create_todo(token):
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        print("Todo created successfully!")
+        print("[green]Todo created successfully![/green]")
     else:
         print(response)
 
@@ -75,7 +76,7 @@ def get_todos(token):
             print(f'Id: {todo["_id"]}')
             print(f'Title: {todo["title"]}')
             print(f'Description: {todo["description"]}')
-            print(f'Status: {todo["status"]}')
+            print(f'Status: [green]{todo["status"]}[/green]')
             print("-------------------------------------\n")
     else:
         print(request)
@@ -87,7 +88,7 @@ def delete_todo(id, token):
     request = requests.delete(url, headers={"Authorization": "Bearer " + token})
 
     if request.status_code == 200:
-        print("Todo deleted successfully!")
+        print("[green]Todo deleted successfully![/green]")
     else:
         print(request)
 
@@ -106,7 +107,7 @@ def patch_todo(id, token):
     request = requests.patch(url, payload, headers={"Authorization": "Bearer " + token})
 
     if request.status_code == 200:
-        print("Todo updated successfully!")
+        print("[green]Todo updated successfully![/green]")
     else:
         print(request)
 
@@ -139,6 +140,6 @@ if __name__ == "__main__":
         elif choice == "0":
             break
         else:
-            print("Invalid choice!")
+            print("[red]Invalid choice![/red]")
 
 
