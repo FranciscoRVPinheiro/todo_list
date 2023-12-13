@@ -79,7 +79,7 @@ def get_todos(token):
             print(f'--| Status: [green]{todo["status"]}[/green]')
             print("-------------------------------------------------\n")
     else:
-        print(response.json())
+        print(request.json())
 
 
 def delete_todo(id, token):
@@ -90,7 +90,7 @@ def delete_todo(id, token):
     if request.status_code == 200:
         print("\n[green]Todo deleted successfully![/green]\n")
     else:
-        print(response.json())
+        print(request.json())
 
 
 def patch_todo(id, token):
@@ -109,7 +109,7 @@ def patch_todo(id, token):
     if request.status_code == 200:
         print("\n[green]Todo updated successfully![/green]\n")
     else:
-        print(response.json())
+        print(request.json())
 
 if __name__ == "__main__":
 
